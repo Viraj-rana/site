@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import { blogPosts } from "../data/blogs";
+import { ui } from "../data/i18n";
+import { Icon } from "astro-icon/components";
+---
+
+<BaseLayout
+  title={ui.en.blogs.pageTitle}
+  titleRu={ui.ru.blogs.pageTitle}
+  activePage="blogs"
+>
+  <div class="max-w-7xl mx-auto px-4 mt-3">
+    <h1
+      class="text-center text-3xl md:text-4xl font-medium text-slate-900 mb-4"
+    >
+      <span class="lang-en">{ui.en.blogs.heading}</span>
+      <span class="lang-ru">{ui.ru.blogs.heading}</span>
+    </h1>
+
+    {
+      blogPosts.length === 0 ? (
+        <p class="text-center text-slate-600 mt-8">
+          <span class="lang-en">{ui.en.blogs.empty}</span>
+          <span class="lang-ru">{ui.ru.blogs.empty}</span>
+        </p>
+      ) : (
+        <div class="max-w-3xl mx-auto space-y-4">
+          {blogPosts.map((post) => (
+            <Card>
+              <div class="text-center">
+                <h2 class="text-lg font-semibold text-slate-900">
+                  <span class="lang-en">{post.title.en}</span>
+                  <span class="lang-ru">{post.title.ru}</span>
+                </h2>
+                {post.date && (
+                  <p class="text-sm text-slate-500 mt-1">{post.date}</p>
+                )}
+                <p class="text-slate-600 mt-3 text-justify">
+                  <span class="lang-en">{post.description.en}</span>
+                  <span class="lang-ru">{post.description.ru}</span>
+                </p>
+                {post.url && (
+                  <a
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 mt-3 text-blue-800 hover:text-blue-900 no-underline font-medium"
+                  >
+                    <Icon name="bi:box-arrow-up-right" class="w-4 h-4" />
+                    <span class="lang-en">Read</span>
+                    <span class="lang-ru">Читать</span>
+                  </a>
+                )}
+              </div>
+            </Card>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

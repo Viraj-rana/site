@@ -1,0 +1,124 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TimelineAlternating from "../components/TimelineAlternating.astro";
+import TimelineCard from "../components/TimelineCard.astro";
+import TimelineYearMarker from "../components/TimelineYearMarker.astro";
+import { certificatesByYear } from "../data/certificates";
+import { ui } from "../data/i18n";
+import { Icon } from "astro-icon/components";
+
+const totalCerts = certificatesByYear.reduce(
+  (sum, yg) => sum + yg.certificates.length,
+  0,
+);
+let cumulative = 0;
+const yearGroupOffsets = certificatesByYear.map((yg) => {
+  const offset = cumulative;
+  cumulative += yg.certificates.length;
+  return offset;
+});
+---
+
+<BaseLayout
+  title={ui.en.certificates.pageTitle}
+  titleRu={ui.ru.certificates.pageTitle}
+  activePage="certificates"
+>
+  <div class="max-w-7xl mx-auto px-4 mt-3">
+    <h1
+      class="text-center text-3xl md:text-4xl font-medium text-slate-900 mb-1"
+    >
+      <span class="lang-en">{ui.en.certificates.heading}</span>
+      <span class="lang-ru">{ui.ru.certificates.heading}</span>
+    </h1>
+    {
+      certificatesByYear.length === 0 ? (
+        <p class="text-center text-slate-600 mt-8">
+          <span class="lang-en">{ui.en.certificates.empty}</span>
+          <span class="lang-ru">{ui.ru.certificates.empty}</span>
+        </p>
+      ) : (
+    <TimelineAlternating>
+      {
+        certificatesByYear.map((yearGroup, yi) => (
+          <div>
+            <TimelineYearMarker year={yearGroup.year} />
+            {yearGroup.certificates.map((cert, index) => {
+              const globalIndex = yearGroupOffsets[yi] + index;
+              const side =
+                (totalCerts - 1 - globalIndex) % 2 === 0 ? "left" : "right";
+              return (
+                <TimelineCard side={side}>
+                  <div class="text-center">
+                    <h5 class="text-lg font-medium text-slate-900">
+                      {cert.title}
+                    </h5>
+                    {cert.richIssuer ? (
+                      <p class="text-sm text-slate-500 flex items-center justify-center gap-2">
+                        {cert.logo && (
+                          <img
+                            src={`${import.meta.env.BASE_URL}${cert.logo}`}
+                            alt={cert.issuer}
+                            class:list={[
+                              cert.logoSize || "w-8 h-8",
+                              "rounded object-contain bg-white",
+                              cert.issuer === "DataCamp" ||
+                              cert.issuer === "Coursera"
+                                ? "px-0.5 py-0"
+                                : "px-0.5 py-0.5",
+                            ]}
+                          />
+                        )}
+                        <span set:html={cert.richIssuer} />
+                      </p>
+                    ) : (
+                      <p class="text-sm mt-1 mb-2 text-slate-500 flex items-center justify-center gap-2">
+                        {cert.logo && (
+                          <img
+                            src={`${import.meta.env.BASE_URL}${cert.logo}`}
+                            alt={cert.issuer}
+                            class:list={[
+                              cert.logoSize || "w-8 h-8",
+                              "rounded object-contain bg-white",
+                              cert.issuer === "DataCamp" ||
+                              cert.issuer === "Coursera"
+                                ? "px-0.5 py-0"
+                                : "px-0.5 py-0.5",
+                            ]}
+                          />
+                        )}
+                        <span>{cert.issuer}</span>
+                        {cert.certificateImage && (
+                          <img
+                            src={`${import.meta.env.BASE_URL}${cert.certificateImage.slice(1)}`}
+                            alt={`${cert.title} certificate badge`}
+                            class="w-8 h-8 rounded object-contain bg-white px-0.5 py-0.5"
+                          />
+                        )}
+                      </p>
+                    )}
+                    <a
+                      href={
+                        cert.link.startsWith("/")
+                          ? `${import.meta.env.BASE_URL}${cert.link.slice(1)}`
+                          : cert.link
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View ${cert.title} certificate`}
+                      class="text-slate-600 hover:text-blue-800 transition-colors duration-200"
+                    >
+                      <Icon name="bi:award" class="w-6 h-6 inline-block" />
+                    </a>
+                  </div>
+                </TimelineCard>
+              );
+            })}
+          </div>
+        ))
+      }
+    </TimelineAlternating>
+      )
+    }
+  </div>
+</BaseLayout>

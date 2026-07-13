@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 10000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox"]
+    }
+  },
+  "urls": [
+    "http://localhost:4321/site/",
+    "http://localhost:4321/site/about/",
+    "http://localhost:4321/site/career/",
+    "http://localhost:4321/site/projects/",
+    "http://localhost:4321/site/certificates/"
+  ]
+}

@@ -1,0 +1,17 @@
+/* Force light / white theme */
+:root {
+  --theme-bg: #ffffff;
+  --theme-card: #ffffff;
+  --theme-card-hover: #f8fafc;
+  --theme-text: #0f172a;
+  --theme-text-secondary: #334155;
+  --theme-text-muted: #64748b;
+  --theme-border: #e2e8f0;
+  --theme-accent: #1e3a8a;
+}
+
+html,
+body {
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
+}

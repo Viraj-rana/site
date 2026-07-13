@@ -1,0 +1,247 @@
+/* Timeline layout variables */
+:root {
+  --tl-card-width: 310px;
+  --tl-gap: 30px;
+  --tl-dot-size: 12px;
+  --tl-arrow-size: 10px;
+}
+
+/* Timeline Alternating: Left/Right Positioning */
+.timeline-item.left {
+  left: calc(50% - var(--tl-card-width) - var(--tl-gap));
+}
+
+.timeline-item.right {
+  left: calc(50% + var(--tl-gap));
+}
+
+/* Timeline Alternating: Card sizing */
+.timeline-item .card-timeline {
+  position: relative;
+  width: 100%;
+  max-width: var(--tl-card-width);
+  z-index: 6;
+}
+
+/* Dot positions on center line */
+.dot-left {
+  left: calc(var(--tl-card-width) + var(--tl-gap) - var(--tl-dot-size) / 2);
+}
+
+.dot-right {
+  left: calc(-1 * (var(--tl-gap) + var(--tl-dot-size) / 2));
+}
+
+/* Card shadow using drop-shadow so it wraps around the arrow */
+.timeline-item .card-timeline {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition:
+    filter 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.timeline-item .card-timeline:hover {
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+/* Card arrows as part of the card element */
+.timeline-item.left .card-timeline::before,
+.timeline-item.right .card-timeline::before {
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  top: 20%;
+  border-style: solid;
+  transform: translateY(-50%);
+  transition: border-color 0.3s ease;
+}
+
+.timeline-item.left .card-timeline::before {
+  right: calc(-1 * var(--tl-arrow-size));
+  border-width: var(--tl-arrow-size) 0 var(--tl-arrow-size) var(--tl-arrow-size);
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.timeline-item.right .card-timeline::before {
+  left: calc(-1 * var(--tl-arrow-size));
+  border-width: var(--tl-arrow-size) var(--tl-arrow-size) var(--tl-arrow-size) 0;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+/* Arrow color changes on hover */
+.timeline-item.left .card-timeline:hover::before {
+  border-color: transparent transparent transparent #f8fafc;
+}
+
+.timeline-item.right .card-timeline:hover::before {
+  border-color: transparent #f8fafc transparent transparent;
+}
+
+/* Vertical timeline: no arrows */
+.timeline-vertical .timeline-item::before,
+.timeline-vertical .timeline-item::after {
+  display: none;
+}
+
+.timeline-track {
+  background: #dbeafe;
+}
+
+.timeline-progress {
+  transition: height 0.18s linear;
+  box-shadow: 0 0 12px rgba(30, 58, 138, 0.45);
+}
+
+.career-timeline-item {
+  padding-left: 0.25rem;
+}
+
+.career-timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 1.6rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 9999px;
+  background: #93c5fd;
+  border: 2px solid #3b82f6;
+  transform: translateX(-50%);
+  z-index: 2;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.career-card {
+  position: relative;
+  z-index: 3;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease !important;
+}
+
+.career-timeline-item:hover .career-card,
+.career-timeline-item.is-active .career-card {
+  background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 100%) !important;
+  border-color: #1e3a8a !important;
+  box-shadow: 0 12px 28px rgba(30, 58, 138, 0.22) !important;
+  transform: translateY(-2px);
+}
+
+.career-timeline-item:hover .career-card-title,
+.career-timeline-item.is-active .career-card-title {
+  color: #1e40af !important;
+}
+
+.career-timeline-item:hover .career-card-meta,
+.career-timeline-item.is-active .career-card-meta {
+  color: #1e3a8a !important;
+}
+
+.career-timeline-item:hover .career-timeline-dot,
+.career-timeline-item.is-active .career-timeline-dot {
+  background: #1e3a8a;
+  border-color: #1e40af;
+  box-shadow: 0 0 0 5px rgba(30, 58, 138, 0.18);
+  transform: translateX(-50%) scale(1.15);
+}
+
+/* Career accordion: hide default marker */
+.career-accordion summary::-webkit-details-marker,
+.career-accordion summary::marker {
+  display: none;
+}
+
+/* Career accordion: chevron rotation */
+.career-accordion[open] .career-chevron {
+  transform: rotate(180deg);
+}
+
+/* Career accordion: smooth expand/collapse */
+.career-accordion-body {
+  overflow: hidden;
+  animation: accordion-close 0.3s ease forwards;
+}
+
+.career-accordion[open] .career-accordion-body {
+  animation: accordion-open 0.3s ease forwards;
+}
+
+@keyframes accordion-open {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 2000px;
+  }
+}
+
+@keyframes accordion-close {
+  from {
+    opacity: 1;
+    max-height: 2000px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+/* Responsive: collapse timeline on mobile */
+@media (max-width: 767px) {
+  .timeline-item.left,
+  .timeline-item.right {
+    left: auto;
+    margin-left: 0;
+  }
+
+  .timeline-item .card-timeline {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    border-left: 3px solid #1d4ed8;
+  }
+
+  .timeline-line {
+    display: none;
+  }
+
+  .timeline-interactive .timeline-track {
+    left: 0.65rem;
+    transform: none;
+  }
+
+  .timeline-interactive .career-timeline-dot {
+    left: 0.65rem;
+  }
+
+  .timeline-interactive .career-timeline-item {
+    padding-left: 1.5rem;
+  }
+
+  .dot-left,
+  .dot-right {
+    display: none;
+  }
+
+  .timeline-item.left .card-timeline::before,
+  .timeline-item.right .card-timeline::before {
+    display: none;
+  }
+
+  .timeline-vertical .card {
+    border-left: 3px solid #1d4ed8;
+  }
+
+  .timeline-interactive .career-card {
+    border-left-width: 3px;
+  }
+}

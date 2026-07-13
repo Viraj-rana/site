@@ -1,0 +1,314 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { intro, socialLinks } from "../data/intro";
+import { ui } from "../data/i18n";
+import { Icon } from "astro-icon/components";
+---
+
+<BaseLayout
+  title={ui.en.home.pageTitle}
+  titleRu={ui.ru.home.pageTitle}
+  activePage="home"
+>
+  <div class="min-h-[calc(100vh-56px-60px)] flex items-center">
+    <div class="max-w-7xl mx-auto px-4 w-full">
+      <div
+        class="flex flex-col-reverse md:flex-row items-center justify-center gap-10 md:gap-16"
+      >
+        <div
+          class="text-center md:text-left md:w-1/2 max-w-xl opacity-0 translate-y-5 animate-fadeInUp"
+        >
+          <h1
+            class="name-disintegrate relative inline-block text-4xl md:text-6xl font-bold text-slate-900 leading-tight min-h-[1.2em] md:min-h-[1.15em]"
+            aria-label={intro.name}
+            data-name-en={intro.names.en}
+            data-name-ru={intro.names.ru}
+            data-name-hi={intro.names.hi}
+          >
+            <span class="name-text relative z-10">{intro.names.en}</span>
+            <canvas
+              class="name-dust-canvas pointer-events-none absolute left-0 top-0 z-20"
+              aria-hidden="true"></canvas
+            >
+          </h1>
+          <p class="text-xl md:text-2xl text-blue-800 mt-3">
+            <span class="lang-en">{intro.title.en}</span>
+            <span class="lang-ru">{intro.title.ru}</span>
+          </p>
+          <div
+            class="flex items-center gap-4 mt-6 justify-center md:justify-start"
+          >
+            {
+              socialLinks.map((link) => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label.en}
+                  class="text-slate-900 hover:text-blue-800 transition-colors duration-300"
+                >
+                  <Icon name={link.icon} class="w-6 h-6" />
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <div
+          class="md:w-auto flex justify-center opacity-0 translate-y-5 animate-fadeInUp md:-translate-x-4 lg:-translate-x-8"
+        >
+          <div
+            class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-lg border-2 border-blue-800"
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}image_2.png`}
+              alt="Viraj Rana"
+              class="w-full h-full object-cover object-center scale-[1.15]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .name-disintegrate {
+    overflow: visible;
+  }
+
+  .name-dust-canvas {
+    overflow: visible;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  type DustParticle = {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    alpha: number;
+    r: number;
+    g: number;
+    b: number;
+    delay: number;
+  };
+
+  function initNameDisintegrate() {
+    const root = document.querySelector(".name-disintegrate") as HTMLElement | null;
+    const textEl = root?.querySelector(".name-text") as HTMLElement | null;
+    const canvas = root?.querySelector(".name-dust-canvas") as HTMLCanvasElement | null;
+    if (!root || !textEl || !canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const names = [
+      root.dataset.nameEn || "Viraj Rana",
+      root.dataset.nameRu || "Вирадж Рана",
+      root.dataset.nameHi || "विराज राणा",
+    ];
+
+    let cancelled = false;
+    let animId = 0;
+    const tweens: gsap.core.Tween[] = [];
+
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const t = gsap.delayedCall(ms / 1000, resolve);
+        tweens.push(t as unknown as gsap.core.Tween);
+      });
+
+    const sampleParticles = (name: string): DustParticle[] => {
+      const style = getComputedStyle(textEl);
+      const fontSize = parseFloat(style.fontSize);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const font = `${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
+
+      const probe = document.createElement("canvas");
+      const probeCtx = probe.getContext("2d")!;
+      probeCtx.font = font;
+      const textWidth = Math.ceil(probeCtx.measureText(name).width);
+      const textHeight = Math.ceil(fontSize * 1.4);
+
+      const off = document.createElement("canvas");
+      off.width = Math.max(1, Math.ceil(textWidth * dpr));
+      off.height = Math.max(1, Math.ceil(textHeight * dpr));
+      const offCtx = off.getContext("2d")!;
+      offCtx.scale(dpr, dpr);
+      offCtx.font = font;
+      offCtx.fillStyle = style.color || "#0f172a";
+      offCtx.textBaseline = "alphabetic";
+      // Match typical CSS text baseline inside the line box
+      offCtx.fillText(name, 0, fontSize * 0.9);
+
+      const { data, width, height } = offCtx.getImageData(0, 0, off.width, off.height);
+      const gap = Math.max(2, Math.round(2.2 * dpr));
+      const particles: DustParticle[] = [];
+
+      for (let y = 0; y < height; y += gap) {
+        for (let x = 0; x < width; x += gap) {
+          const i = (y * width + x) * 4;
+          if (data[i + 3] < 140) continue;
+
+          // Sweep left → right like the snap / dust trail
+          const progressX = x / width;
+          particles.push({
+            x: x / dpr + (Math.random() - 0.5) * 1.4,
+            y: y / dpr + (Math.random() - 0.5) * 1.4,
+            vx: 1.0 + Math.random() * 3.3 + progressX * 1.8,
+            vy: (Math.random() - 0.5) * 2.5,
+            size: 0.9 + Math.random() * 1.5,
+            alpha: data[i + 3] / 255,
+            r: data[i],
+            g: data[i + 1],
+            b: data[i + 2],
+            delay: progressX * 0.58 + Math.random() * 0.2,
+          });
+        }
+      }
+
+      return particles;
+    };
+
+    const disintegrate = (name: string) =>
+      new Promise<void>((resolve) => {
+        if (cancelled) {
+          resolve();
+          return;
+        }
+
+        const particles = sampleParticles(name);
+        const rect = textEl.getBoundingClientRect();
+        const rootRect = root.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const expandRight = 280;
+        const expandY = 100;
+
+        canvas.width = Math.ceil((rect.width + expandRight) * dpr);
+        canvas.height = Math.ceil((rect.height + expandY * 2) * dpr);
+        canvas.style.width = `${rect.width + expandRight}px`;
+        canvas.style.height = `${rect.height + expandY * 2}px`;
+        canvas.style.left = `${rect.left - rootRect.left}px`;
+        canvas.style.top = `${rect.top - rootRect.top - expandY}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const offsetY = expandY;
+        textEl.style.opacity = "0";
+
+        const state = { t: 0 };
+        // 5% slower than the original dust duration (1.55 → 1.63)
+        const duration = 1.79;
+
+        const draw = () => {
+          if (cancelled) return;
+          const w = canvas.width / dpr;
+          const h = canvas.height / dpr;
+          ctx.clearRect(0, 0, w, h);
+
+          for (const p of particles) {
+            const localT = Math.max(0, state.t - p.delay);
+            if (localT <= 0) {
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y + offsetY, p.size * 0.55, 0, Math.PI * 2);
+              ctx.fill();
+              continue;
+            }
+
+            // Each particle fully fades before the animation ends (no leftover grid/rect)
+            const fadeDur = Math.max(0.45, duration - p.delay);
+            const life = Math.min(1, localT / fadeDur);
+            if (life >= 1) continue;
+
+            const drift = life * life;
+            const scatter = life * life;
+            const x = p.x + p.vx * life * 80 + Math.sin(p.y * 12.1 + p.vx) * scatter * 14;
+            const y =
+              p.y +
+              offsetY +
+              p.vy * life * 48 +
+              drift * 22 +
+              Math.cos(p.x * 9.3 + p.vy) * scatter * 12;
+            const alpha = p.alpha * Math.pow(1 - life, 1.25);
+            if (alpha <= 0.03) continue;
+
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+            const s = p.size * (1 - life * 0.45) * 0.55;
+            ctx.beginPath();
+            ctx.arc(x, y, Math.max(0.2, s), 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.globalAlpha = 1;
+        };
+
+        const tween = gsap.to(state, {
+          t: duration,
+          duration,
+          ease: "power1.out",
+          onUpdate: draw,
+          onComplete() {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.width = 0;
+            canvas.height = 0;
+            canvas.style.width = "0";
+            canvas.style.height = "0";
+            resolve();
+          },
+        });
+        tweens.push(tween);
+        draw();
+      });
+
+    const showName = (name: string) =>
+      new Promise<void>((resolve) => {
+        textEl.textContent = name;
+        textEl.style.opacity = "0";
+        const tween = gsap.to(textEl, {
+          opacity: 1,
+          duration: 0.64,
+          ease: "power2.out",
+          onComplete: resolve,
+        });
+        tweens.push(tween);
+      });
+
+    async function loop() {
+      let index = 0;
+      textEl.textContent = names[0];
+      textEl.style.opacity = "1";
+
+      while (!cancelled) {
+        await wait(2080);
+        if (cancelled) break;
+        await disintegrate(names[index]);
+        if (cancelled) break;
+        await wait(250);
+        index = (index + 1) % names.length;
+        await showName(names[index]);
+      }
+    }
+
+    const previous = (window as any).__nameDustCancel as (() => void) | undefined;
+    previous?.();
+    (window as any).__nameDustCancel = () => {
+      cancelled = true;
+      cancelAnimationFrame(animId);
+      tweens.forEach((t) => t.kill());
+      gsap.killTweensOf(textEl);
+    };
+
+    loop();
+  }
+
+  initNameDisintegrate();
+  document.addEventListener("astro:page-load", initNameDisintegrate);
+</script>

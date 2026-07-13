@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+---
+
+<BaseLayout
+  title="404 - Page Not Found"
+  titleRu="404 — Страница не найдена"
+  activePage="home"
+>
+  <div class="max-w-7xl mx-auto px-4 mt-3">
+    <div class="flex justify-center">
+      <div class="w-full md:w-2/3">
+        <Card>
+          <div class="text-center">
+            <h1 class="text-slate-900">404</h1>
+            <p class="text-slate-600">
+              <span class="lang-en">Page Not Found</span>
+              <span class="lang-ru">Страница не найдена</span>
+            </p>
+            <a
+              href={import.meta.env.BASE_URL}
+              class="inline-block mt-4 bg-white border border-slate-200 text-slate-900 px-6 py-2 rounded transition-all duration-300 hover:bg-blue-800 hover:border-blue-800 hover:text-white hover:-translate-y-0.5 no-underline"
+            >
+              <span class="lang-en">Go Home</span>
+              <span class="lang-ru">На главную</span>
+            </a>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
