@@ -4,7 +4,7 @@ import icon from 'astro-icon';
 
 export default defineConfig({
   site: "https://viraj-rana.github.io",
-  base: "/site",
+  base: "/site/",
   integrations: [tailwind(), icon()],
   devToolbar: {
     enabled: false,
