@@ -109,7 +109,7 @@ import { Icon } from "astro-icon/components";
 
     const names = [
       root.dataset.nameEn || "Viraj Rana",
-      root.dataset.nameRu || "Вирадж Рана",
+      root.dataset.nameRu || "Вирадж Рाना",
       root.dataset.nameHi || "विराज राणा",
     ];
 
@@ -297,9 +297,12 @@ import { Icon } from "astro-icon/components";
       }
     }
 
-    const previous = (window as any).__nameDustCancel as (() => void) | undefined;
+    // typed window for name dust cancel flag
+    type NameDustWindow = Window & { __nameDustCancel?: () => void };
+
+    const previous = (window as NameDustWindow).__nameDustCancel as (() => void) | undefined;
     previous?.();
-    (window as any).__nameDustCancel = () => {
+    (window as NameDustWindow).__nameDustCancel = () => {
       cancelled = true;
       cancelAnimationFrame(animId);
       tweens.forEach((t) => t.kill());

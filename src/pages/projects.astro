@@ -133,6 +133,9 @@ for (const project of projects) {
 </BaseLayout>
 
 <script>
+  type FlowWindow = Window & { [key: string]: unknown };
+  const win = window as FlowWindow;
+
   function initFlowTimelines() {
     const timelines = document.querySelectorAll(
       "[data-timeline]",
@@ -149,8 +152,8 @@ for (const project of projects) {
 
       const key = timeline.getAttribute("data-timeline") || "flow";
       const boundKey = `__flowTimelineBound_${key}`;
-      if ((window as any)[boundKey]) return;
-      (window as any)[boundKey] = true;
+      if ((win as Record<string, boolean>)[boundKey]) return;
+      (win as Record<string, boolean>)[boundKey] = true;
 
       const setActive = (activeIndex: number) => {
         items.forEach((item, index) => {
@@ -195,7 +198,7 @@ for (const project of projects) {
     // Allow re-bind after view transitions
     Object.keys(window).forEach((key) => {
       if (key.startsWith("__flowTimelineBound_")) {
-        delete (window as any)[key];
+        delete (win as Record<string, unknown>)[key];
       }
     });
     initFlowTimelines();

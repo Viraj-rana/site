@@ -87,7 +87,9 @@ const ogTitle = title.includes(intro.name) ? title : `${intro.name} | ${title}`;
           var lang = saved === "ru" || saved === "en" ? saved : "en";
           document.documentElement.setAttribute("data-lang", lang);
           document.documentElement.setAttribute("lang", lang);
-        } catch (e) {}
+        } catch {
+          // intentionally empty
+        }
       })();
     </script>
     <ViewTransitions />
@@ -110,7 +112,9 @@ const ogTitle = title.includes(intro.name) ? title : `${intro.name} | ${title}`;
           document.documentElement.setAttribute("lang", lang);
           try {
             localStorage.setItem("portfolio-lang", lang);
-          } catch (e) {}
+          } catch {
+            // intentionally empty
+          }
 
           var titleEn = document.documentElement.getAttribute("data-page-title-en");
           var titleRu = document.documentElement.getAttribute("data-page-title-ru");
