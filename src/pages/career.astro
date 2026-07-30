@@ -182,6 +182,8 @@ for (const entry of careerEntries) {
 </BaseLayout>
 
 <script>
+  type CareerWindow = Window & { __careerTimelineBound?: boolean };
+
   function initCareerTimeline() {
     const timeline = document.querySelector(
       '[data-timeline="career"]',
@@ -196,8 +198,8 @@ for (const entry of careerEntries) {
     ) as HTMLElement[];
     if (!progress || items.length === 0) return;
 
-    if ((window as any).__careerTimelineBound) return;
-    (window as any).__careerTimelineBound = true;
+    if ((window as CareerWindow).__careerTimelineBound) return;
+    (window as CareerWindow).__careerTimelineBound = true;
 
     const setActive = (activeIndex: number) => {
       items.forEach((item, index) => {
@@ -237,7 +239,7 @@ for (const entry of careerEntries) {
 
   initCareerTimeline();
   document.addEventListener("astro:page-load", () => {
-    (window as any).__careerTimelineBound = false;
+    (window as CareerWindow).__careerTimelineBound = false;
     initCareerTimeline();
   });
 </script>
