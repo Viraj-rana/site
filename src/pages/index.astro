@@ -297,9 +297,11 @@ import { Icon } from "astro-icon/components";
       }
     }
 
-    const previous = (window as any).__nameDustCancel as (() => void) | undefined;
+    type NameDustWindow = Window & { __nameDustCancel?: () => void };
+
+    const previous = (window as NameDustWindow).__nameDustCancel as (() => void) | undefined;
     previous?.();
-    (window as any).__nameDustCancel = () => {
+    (window as NameDustWindow).__nameDustCancel = () => {
       cancelled = true;
       cancelAnimationFrame(animId);
       tweens.forEach((t) => t.kill());
