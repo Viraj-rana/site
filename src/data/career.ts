@@ -17,7 +17,7 @@ export interface CareerEntry {
 export const careerEntries: CareerEntry[] = [
   {
     title: {
-      en: "Software Engineer",
+      en: "MLE (Software Engineer SDE-2)",
       ru: "Инженер-программист",
     },
     organization: {
@@ -38,6 +38,27 @@ export const careerEntries: CareerEntry[] = [
   },
   {
     title: {
+      en: "Machine learning engineer",
+      ru: "Инженер-программист MLE",
+    },
+    organization: {
+      en: "AVALIN",
+      ru: "AVALIN",
+    },
+    logo: "logos/Avalin.svg",
+    dateRange: {
+      en: "2025 - April",
+      ru: "2025 — April",
+    },
+    description: [
+      {
+        en: " Worked in Avalin , building and shipping AI voice agent with local RAG pipeline system architecture products with a focus on practical engineering delivery.",
+        ru: "Работал в компании Avalin, занимаясь разработкой и внедрением голосовых ИИ-агентов на базе архитектуры с локальным конвейером RAG, с упором на практическую реализацию инженерных решений.",
+      },
+    ],
+  },
+  {
+    title: {
       en: "Software Engineer — Amazon Alexa",
       ru: "Инженер-программист — Amazon Alexa",
     },
@@ -47,8 +68,8 @@ export const careerEntries: CareerEntry[] = [
     },
     logo: "logos/amazon.svg",
     dateRange: {
-      en: "2023",
-      ru: "2023",
+      en: "2022",
+      ru: "2022",
     },
     description: [
       {
@@ -82,8 +103,8 @@ export const careerEntries: CareerEntry[] = [
     },
     logo: "logos/concentrix.svg",
     dateRange: {
-      en: "2022",
-      ru: "2022",
+      en: "2021",
+      ru: "2021",
     },
     description: [
       {
@@ -133,7 +154,7 @@ export const careerEntries: CareerEntry[] = [
   },
   {
     title: {
-      en: "Summer Internship Program",
+      en: "Summer Internship Program MLE",
       ru: "Летняя программа стажировки",
     },
     organization: {
