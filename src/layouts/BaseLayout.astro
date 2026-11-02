@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import ScrollToTop from "../components/ScrollToTop.astro";
 import ParticleNetwork from "../components/ParticleNetwork.astro";
-import { intro } from "../data/intro";
+import { intro, socialLinks } from "../data/intro";
 import { ui } from "../data/i18n";
 import "../styles/theme.css";
 import "../styles/timeline.css";
@@ -16,6 +16,7 @@ interface Props {
   descriptionRu?: string;
   activePage: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   descriptionRu = ui.ru.meta.description,
   activePage,
   ogImage = "image_2.jpg",
+  noindex = false,
 } = Astro.props;
 
 const site = Astro.site ?? new URL("https://viraj-rana.github.io");
@@ -34,6 +36,45 @@ const ogImageURL = new URL(
   site,
 ).href;
 const ogTitle = title.includes(intro.name) ? title : `${intro.name} | ${title}`;
+const homeURL = new URL(import.meta.env.BASE_URL, site).href;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${homeURL}#person`,
+      name: intro.name,
+      alternateName: [intro.names.ru, intro.names.hi],
+      jobTitle: "Software Engineer, AI/ML Research Engineer",
+      description: ui.en.home.description,
+      url: homeURL,
+      image: ogImageURL,
+      email: socialLinks.find((l) => l.url.startsWith("mailto:"))?.url,
+      sameAs: socialLinks.filter((l) => l.url.startsWith("http")).map((l) => l.url),
+      knowsAbout: [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Large Language Models",
+        "Retrieval-Augmented Generation",
+        "AI Agents",
+        "LangGraph",
+        "Python",
+      ],
+      alumniOf: [
+        { "@type": "CollegeOrUniversity", name: "Gurugram University" },
+        { "@type": "CollegeOrUniversity", name: "University of Penn" },
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${homeURL}#website`,
+      name: `${intro.name} - Portfolio`,
+      url: homeURL,
+      inLanguage: ["en", "ru"],
+      author: { "@id": `${homeURL}#person` },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -43,7 +84,12 @@ const ogTitle = title.includes(intro.name) ? title : `${intro.name} | ${title}`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} data-desc-en={description} data-desc-ru={descriptionRu} />
     <title>{title}</title>
-    <link rel="canonical" href={canonicalURL} />
+    <meta name="author" content={intro.name} />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
+    <meta name="theme-color" content="#1e3a8a" />
+    {!noindex && <link rel="canonical" href={canonicalURL} />}
+    <link rel="sitemap" type="application/xml" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <!-- Open Graph / Telegram / WhatsApp / Facebook -->
     <meta property="og:type" content="website" />

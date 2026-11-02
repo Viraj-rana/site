@@ -14,6 +14,7 @@
     "check:all": "npm run lint && npm run format && npm run build && sh -c 'npm run preview & sleep 5 && npm run check:links && npm run check:a11y; kill $!'"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/bi": "^1.2.7",
     "@iconify-json/devicon": "^1.2.62",

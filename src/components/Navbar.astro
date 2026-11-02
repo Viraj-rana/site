@@ -10,15 +10,15 @@ const base = import.meta.env.BASE_URL;
 
 const navItems = [
   { key: "home" as const, href: `${base}`, page: "home" },
-  { key: "about" as const, href: `${base}about`, page: "about" },
-  { key: "career" as const, href: `${base}career`, page: "career" },
-  { key: "projects" as const, href: `${base}projects`, page: "projects" },
+  { key: "about" as const, href: `${base}about/`, page: "about" },
+  { key: "career" as const, href: `${base}career/`, page: "career" },
+  { key: "projects" as const, href: `${base}projects/`, page: "projects" },
   {
     key: "certificates" as const,
-    href: `${base}certificates`,
+    href: `${base}certificates/`,
     page: "certificates",
   },
-  { key: "blogs" as const, href: `${base}blogs`, page: "blogs" },
+  { key: "blogs" as const, href: `${base}blogs/`, page: "blogs" },
 ];
 ---
 
