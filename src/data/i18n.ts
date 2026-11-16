@@ -58,9 +58,12 @@ export const ui = {
       description:
         "Articles by Viraj Rana on AI, machine learning, LLMs, AI agents and software engineering.",
       heading: "Blogs",
+      kicker: "My Articles",
+      subtitle:
+        "Read my latest articles, insights and updates on AI, robotics and more.",
       empty: "Blog posts coming soon.",
       readMore: "Read more",
-      readArticle: "Read full article on Viraj Webblogs",
+      readArticle: "Read more",
     },
     footer: {
       getInTouch: "Get In Touch",
@@ -127,9 +130,12 @@ export const ui = {
       description:
         "Статьи Вираджа Раны об ИИ, машинном обучении, LLM, AI-агентах и разработке ПО.",
       heading: "Блог",
+      kicker: "Мои статьи",
+      subtitle:
+        "Свежие материалы об ИИ, робототехнике и инженерии на Viraj Webblogs.",
       empty: "Посты блога скоро появятся.",
       readMore: "Все статьи",
-      readArticle: "Читать статью на Viraj Webblogs",
+      readArticle: "Читать",
     },
     footer: {
       getInTouch: "Связаться",
