@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Card from "../components/Card.astro";
-import { blogPosts } from "../data/blogs";
+import { blogPosts, BLOG_ARCHIVE_URL } from "../data/blogs";
 import { ui } from "../data/i18n";
 import { Icon } from "astro-icon/components";
 ---
@@ -13,9 +13,9 @@ import { Icon } from "astro-icon/components";
   descriptionRu={ui.ru.blogs.description}
   activePage="blogs"
 >
-  <div class="max-w-7xl mx-auto px-4 mt-3">
+  <div class="max-w-7xl mx-auto px-4 mt-3 pb-12">
     <h1
-      class="text-center text-3xl md:text-4xl font-medium text-slate-900 mb-4"
+      class="text-center text-3xl md:text-4xl font-medium text-slate-900 mb-8"
     >
       <span class="lang-en">{ui.en.blogs.heading}</span>
       <span class="lang-ru">{ui.ru.blogs.heading}</span>
@@ -28,37 +28,65 @@ import { Icon } from "astro-icon/components";
           <span class="lang-ru">{ui.ru.blogs.empty}</span>
         </p>
       ) : (
-        <div class="max-w-3xl mx-auto space-y-4">
-          {blogPosts.map((post) => (
-            <Card>
-              <div class="text-center">
-                <h2 class="text-lg font-semibold text-slate-900">
-                  <span class="lang-en">{post.title.en}</span>
-                  <span class="lang-ru">{post.title.ru}</span>
-                </h2>
-                {post.date && (
-                  <p class="text-sm text-slate-500 mt-1">{post.date}</p>
-                )}
-                <p class="text-slate-600 mt-3 text-justify">
-                  <span class="lang-en">{post.description.en}</span>
-                  <span class="lang-ru">{post.description.ru}</span>
-                </p>
-                {post.url && (
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 mt-3 text-blue-800 hover:text-blue-900 no-underline font-medium"
-                  >
-                    <Icon name="bi:box-arrow-up-right" class="w-4 h-4" />
-                    <span class="lang-en">Read</span>
-                    <span class="lang-ru">Читать</span>
-                  </a>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
+        <>
+          <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            {blogPosts.map((post) => (
+              <Card class="!p-0 overflow-hidden group">
+                <a
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block no-underline text-inherit h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-lg"
+                >
+                  {post.image && (
+                    <div class="aspect-video w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+                      <img
+                        src={post.image}
+                        alt={post.imageAlt?.en ?? post.title.en}
+                        width="640"
+                        height="360"
+                        loading="lazy"
+                        decoding="async"
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      />
+                    </div>
+                  )}
+                  <div class="p-5 text-left">
+                    <h2 class="text-lg font-semibold text-slate-900 leading-snug group-hover:text-blue-800 transition-colors">
+                      <span class="lang-en">{post.title.en}</span>
+                      <span class="lang-ru">{post.title.ru}</span>
+                    </h2>
+                    {post.date && (
+                      <p class="text-sm text-slate-500 mt-1.5">{post.date}</p>
+                    )}
+                    <p class="text-slate-600 mt-3 text-sm leading-relaxed line-clamp-3">
+                      <span class="lang-en">{post.description.en}</span>
+                      <span class="lang-ru">{post.description.ru}</span>
+                    </p>
+                    <span class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-blue-800">
+                      <Icon name="bi:box-arrow-up-right" class="w-4 h-4" />
+                      <span class="lang-en">{ui.en.blogs.readArticle}</span>
+                      <span class="lang-ru">{ui.ru.blogs.readArticle}</span>
+                    </span>
+                  </div>
+                </a>
+              </Card>
+            ))}
+          </div>
+
+          <div class="text-center mt-10">
+            <a
+              href={BLOG_ARCHIVE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-800 text-white font-medium no-underline hover:bg-blue-900 transition-colors shadow-sm"
+            >
+              <span class="lang-en">{ui.en.blogs.readMore}</span>
+              <span class="lang-ru">{ui.ru.blogs.readMore}</span>
+              <Icon name="bi:arrow-right" class="w-4 h-4" />
+            </a>
+          </div>
+        </>
       )
     }
   </div>
